@@ -44,34 +44,8 @@ export default function CanvasComponent({ id, type, props }) {
           return <ThemedSwitch {...props} />
         case 'slider':
           return <ThemedSlider {...props} />
-        case 'chart':
-          return <ThemedChart {...props} />
-        case 'accordion':
-          return <ThemedAccordion {...props} />
-        case 'carousel':
-          return <ThemedCarousel {...props} />
-        case 'alert':
-          return <ThemedAlert {...props} />
-        case 'progress':
-          return <ThemedProgress {...props} />
-        case 'table':
-          return <ThemedTable {...props} />
-        case 'avatar':
-          return <ThemedAvatar {...props} />
-        case 'breadcrumb':
-          return <ThemedBreadcrumb {...props} />
-        case 'pagination':
-          return <ThemedPagination {...props} />
-        case 'modal':
-          return <ThemedModal {...props} />
-        case 'tooltip':
-          return <ThemedTooltip {...props} />
-        case 'spinner':
-          return <ThemedSpinner {...props} />
-        case 'tabs':
-          return <ThemedTabs {...props} />
         default:
-          return <div className="p-4 bg-muted/50 rounded">Unknown component: {type}</div>
+          return <div className="p-4 bg-muted/50 rounded">Component: {type}</div>
       }
     } catch (error) {
       return <div className="p-4 bg-red-100 text-red-800 rounded">Error rendering {type}: {error.message}</div>
