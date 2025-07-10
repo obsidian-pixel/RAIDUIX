@@ -1,7 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, Square, Type, Image, Layout, Palette, ToggleLeft } from 'lucide-react'
+import { 
+  Search, Square, Type, Image, Layout, Palette, ToggleLeft, 
+  BarChart3, Accordion, Carousel, AlertTriangle, Activity,
+  Table, User, Navigation, MoreHorizontal, Eye, Loader,
+  Tabs, Grid, Calendar, Upload, Play, Bell
+} from 'lucide-react'
 import DraggableItem from '@/components/library/DraggableItem'
 
 export default function LibraryPanel() {
@@ -16,6 +21,7 @@ export default function LibraryPanel() {
         { id: 'input', name: 'Input', icon: Type, type: 'input' },
         { id: 'card', name: 'Card', icon: Layout, type: 'card' },
         { id: 'badge', name: 'Badge', icon: Palette, type: 'badge' },
+        { id: 'avatar', name: 'Avatar', icon: User, type: 'avatar' },
       ]
     },
     {
@@ -25,6 +31,44 @@ export default function LibraryPanel() {
         { id: 'checkbox', name: 'Checkbox', icon: Square, type: 'checkbox' },
         { id: 'switch', name: 'Switch', icon: ToggleLeft, type: 'switch' },
         { id: 'slider', name: 'Slider', icon: Type, type: 'slider' },
+      ]
+    },
+    {
+      name: 'Data Visualization',
+      icon: BarChart3,
+      items: [
+        { id: 'chart-bar', name: 'Bar Chart', icon: BarChart3, type: 'chart', chartType: 'bar' },
+        { id: 'chart-line', name: 'Line Chart', icon: Activity, type: 'chart', chartType: 'line' },
+        { id: 'chart-pie', name: 'Pie Chart', icon: Palette, type: 'chart', chartType: 'pie' },
+        { id: 'table', name: 'Table', icon: Table, type: 'table' },
+        { id: 'progress', name: 'Progress', icon: Activity, type: 'progress' },
+      ]
+    },
+    {
+      name: 'Layout & Navigation',
+      icon: Layout,
+      items: [
+        { id: 'accordion', name: 'Accordion', icon: Accordion, type: 'accordion' },
+        { id: 'tabs', name: 'Tabs', icon: Tabs, type: 'tabs' },
+        { id: 'breadcrumb', name: 'Breadcrumb', icon: Navigation, type: 'breadcrumb' },
+        { id: 'pagination', name: 'Pagination', icon: MoreHorizontal, type: 'pagination' },
+      ]
+    },
+    {
+      name: 'Interactive Components',
+      icon: Carousel,
+      items: [
+        { id: 'carousel', name: 'Carousel', icon: Carousel, type: 'carousel' },
+        { id: 'modal', name: 'Modal', icon: Square, type: 'modal' },
+        { id: 'tooltip', name: 'Tooltip', icon: Eye, type: 'tooltip' },
+      ]
+    },
+    {
+      name: 'Feedback & Status',
+      icon: AlertTriangle,
+      items: [
+        { id: 'alert', name: 'Alert', icon: AlertTriangle, type: 'alert' },
+        { id: 'spinner', name: 'Spinner', icon: Loader, type: 'spinner' },
       ]
     }
   ]
@@ -73,6 +117,7 @@ export default function LibraryPanel() {
                     name={item.name}
                     type={item.type}
                     icon={item.icon}
+                    chartType={item.chartType}
                   />
                 ))}
               </div>
