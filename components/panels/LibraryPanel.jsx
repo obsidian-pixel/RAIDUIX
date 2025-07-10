@@ -48,8 +48,8 @@ export default function LibraryPanel() {
       name: 'Layout & Navigation',
       icon: Layout,
       items: [
-        { id: 'accordion', name: 'Accordion', icon: Accordion, type: 'accordion' },
-        { id: 'tabs', name: 'Tabs', icon: Tabs, type: 'tabs' },
+        { id: 'accordion', name: 'Accordion', icon: Layout, type: 'accordion' },
+        { id: 'tabs', name: 'Tabs', icon: Layout, type: 'tabs' },
         { id: 'breadcrumb', name: 'Breadcrumb', icon: Navigation, type: 'breadcrumb' },
         { id: 'pagination', name: 'Pagination', icon: MoreHorizontal, type: 'pagination' },
       ]
