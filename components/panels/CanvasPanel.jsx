@@ -33,11 +33,11 @@ export default function CanvasPanel() {
     const { addComponent } = useAppStore.getState()
     addComponent({
       type: componentData.type,
-      props: getDefaultProps(componentData.type)
+      props: getDefaultProps(componentData.type, componentData.chartType)
     })
   }
   
-  const getDefaultProps = (type) => {
+  const getDefaultProps = (type, chartType) => {
     const defaults = {
       button: { label: 'Button', variant: 'default', size: 'default' },
       input: { placeholder: 'Enter text...', type: 'text' },
@@ -45,7 +45,43 @@ export default function CanvasPanel() {
       badge: { text: 'Badge', variant: 'default' },
       checkbox: { label: 'Checkbox', checked: false },
       switch: { label: 'Switch', checked: false },
-      slider: { label: 'Slider', min: 0, max: 100, value: 50 }
+      slider: { label: 'Slider', min: 0, max: 100, value: 50 },
+      chart: { type: chartType || 'bar', title: 'Sample Chart' },
+      accordion: { 
+        items: [
+          { title: 'Section 1', content: 'This is the content for section 1.' },
+          { title: 'Section 2', content: 'This is the content for section 2.' }
+        ] 
+      },
+      carousel: { 
+        items: [
+          { title: 'Slide 1', content: 'This is the first slide content.' },
+          { title: 'Slide 2', content: 'This is the second slide content.' },
+          { title: 'Slide 3', content: 'This is the third slide content.' }
+        ] 
+      },
+      alert: { type: 'info', title: 'Information', message: 'This is an informational alert.' },
+      progress: { value: 75, label: 'Progress' },
+      table: {},
+      avatar: { fallback: 'U', size: 'default' },
+      breadcrumb: { 
+        items: [
+          { label: 'Home', href: '/' },
+          { label: 'Components', href: '/components' },
+          { label: 'Current Page', href: '/current' }
+        ] 
+      },
+      pagination: { currentPage: 1, totalPages: 10 },
+      modal: { isOpen: false, title: 'Modal Title' },
+      tooltip: { content: 'This is a tooltip', children: 'Hover me' },
+      spinner: { size: 'default', text: 'Loading...' },
+      tabs: { 
+        tabs: [
+          { id: 'tab1', label: 'Tab 1', content: 'Content for tab 1' },
+          { id: 'tab2', label: 'Tab 2', content: 'Content for tab 2' },
+          { id: 'tab3', label: 'Tab 3', content: 'Content for tab 3' }
+        ] 
+      }
     }
     return defaults[type] || {}
   }
