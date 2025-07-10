@@ -1,0 +1,110 @@
+{
+  "total": 10,
+  "passed": 10,
+  "failed": 0,
+  "success_rate": 100.0,
+  "results": [
+    {
+      "test": "API Root Endpoint",
+      "success": true,
+      "message": "Root endpoint responding correctly",
+      "timestamp": "2025-07-10T17:49:05.591672",
+      "response_data": {
+        "message": "Hello World"
+      }
+    },
+    {
+      "test": "API Root Alternate Endpoint",
+      "success": true,
+      "message": "Alternate root endpoint responding correctly",
+      "timestamp": "2025-07-10T17:49:06.124101",
+      "response_data": {
+        "message": "Hello World"
+      }
+    },
+    {
+      "test": "Status POST Validation",
+      "success": true,
+      "message": "Validation working correctly",
+      "timestamp": "2025-07-10T17:49:06.660236",
+      "response_data": {
+        "error": "client_name is required"
+      }
+    },
+    {
+      "test": "Status POST Endpoint",
+      "success": true,
+      "message": "Status creation successful",
+      "timestamp": "2025-07-10T17:49:07.235919",
+      "response_data": {
+        "id": "60a18413-b9f6-464b-b5d0-e11f77771b1f",
+        "client_name": "RaiduixTestClient",
+        "timestamp": "2025-07-10T17:49:07.175Z",
+        "_id": "686ffd138c17c8ed0088460a"
+      }
+    },
+    {
+      "test": "Status GET Endpoint",
+      "success": true,
+      "message": "Retrieved 1 status records",
+      "timestamp": "2025-07-10T17:49:07.776609",
+      "response_data": {
+        "count": 1
+      }
+    },
+    {
+      "test": "CORS Headers",
+      "success": true,
+      "message": "All CORS headers present",
+      "timestamp": "2025-07-10T17:49:08.303233",
+      "response_data": {
+        "access-control-allow-credentials": "true",
+        "access-control-allow-headers": "*,Content-Type, Authorization",
+        "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "access-control-allow-origin": "*",
+        "content-security-policy": "frame-ancestors *;",
+        "date": "Thu, 10 Jul 2025 17:49:08 GMT",
+        "vary": "RSC, Next-Router-State-Tree, Next-Router-Prefetch",
+        "x-frame-options": "ALLOWALL",
+        "via": "1.1 google",
+        "Content-Length": "0",
+        "Alt-Svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+      }
+    },
+    {
+      "test": "Status POST Endpoint",
+      "success": true,
+      "message": "Status creation successful",
+      "timestamp": "2025-07-10T17:49:08.854211",
+      "response_data": {
+        "id": "ebf8fae3-49a1-4547-8221-1d81b5e5ee1d",
+        "client_name": "RaiduixTestClient",
+        "timestamp": "2025-07-10T17:49:08.849Z",
+        "_id": "686ffd148c17c8ed0088460b"
+      }
+    },
+    {
+      "test": "MongoDB Connection",
+      "success": true,
+      "message": "MongoDB read/write operations successful",
+      "timestamp": "2025-07-10T17:49:08.871905",
+      "response_data": null
+    },
+    {
+      "test": "Invalid Route Handling",
+      "success": true,
+      "message": "404 error handled correctly",
+      "timestamp": "2025-07-10T17:49:09.392071",
+      "response_data": {
+        "error": "Route /nonexistent not found"
+      }
+    },
+    {
+      "test": "Error Handling",
+      "success": true,
+      "message": "Malformed JSON handled with status 500",
+      "timestamp": "2025-07-10T17:49:09.957405",
+      "response_data": null
+    }
+  ]
+}
