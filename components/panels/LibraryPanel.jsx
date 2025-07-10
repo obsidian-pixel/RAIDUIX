@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { 
   Search, Square, Type, Image, Layout, Palette, ToggleLeft, 
-  BarChart3, Accordion, Carousel, AlertTriangle, Activity,
+  BarChart3, ChevronRight, AlertTriangle, Activity,
   Table, User, Navigation, MoreHorizontal, Eye, Loader,
   Tabs, Grid, Calendar, Upload, Play, Bell
 } from 'lucide-react'
