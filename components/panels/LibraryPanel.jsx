@@ -56,9 +56,9 @@ export default function LibraryPanel() {
     },
     {
       name: 'Interactive Components',
-      icon: Carousel,
+      icon: ChevronRight,
       items: [
-        { id: 'carousel', name: 'Carousel', icon: Carousel, type: 'carousel' },
+        { id: 'carousel', name: 'Carousel', icon: ChevronRight, type: 'carousel' },
         { id: 'modal', name: 'Modal', icon: Square, type: 'modal' },
         { id: 'tooltip', name: 'Tooltip', icon: Eye, type: 'tooltip' },
       ]
