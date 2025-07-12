@@ -9,7 +9,7 @@ import Grid from '@/components/canvas/Grid'
 export default function CanvasPanel() {
   const { 
     canvasComponents, addComponent, updateComponentPosition,
-    clearCanvas, zoom, showGrid, snapToGrid 
+    clearCanvas, zoom, showGrid, snapToGrid, setSelectedComponent 
   } = useAppStore()
   
   const [deviceMode, setDeviceMode] = useState('desktop')
@@ -19,6 +19,10 @@ export default function CanvasPanel() {
     mobile: { width: 375, name: 'Mobile' },
     tablet: { width: 768, name: 'Tablet' },
     desktop: { width: '100%', name: 'Desktop' }
+  }
+  
+  const handleCanvasClick = () => {
+    setSelectedComponent(null);
   }
 
   const handleDragOver = (e) => {
@@ -102,7 +106,7 @@ export default function CanvasPanel() {
   }
   
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col" onClick={handleCanvasClick}>
       {/* Canvas Controls */}
       <div className="p-4 border-b border-border/50 bg-card/30">
         <div className="flex items-center justify-between">
@@ -114,7 +118,7 @@ export default function CanvasPanel() {
                 return (
                   <button
                     key={key}
-                    onClick={() => setDeviceMode(key)}
+                    onClick={(e) => { e.stopPropagation(); setDeviceMode(key); }}
                     className={`p-1.5 rounded transition-all ${deviceMode === key ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-foreground'}`}
                     title={name}
                   >
@@ -124,7 +128,7 @@ export default function CanvasPanel() {
               })}
             </div>
             <button
-              onClick={clearCanvas}
+              onClick={(e) => { e.stopPropagation(); clearCanvas(); }}
               className="px-3 py-1.5 text-sm glass-panel rounded-lg text-muted-foreground hover:text-foreground transition-all"
             >
               Clear
