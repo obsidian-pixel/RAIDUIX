@@ -8,6 +8,7 @@ import {
   Tabs, Grid, Calendar, Upload, Play, Bell
 } from 'lucide-react'
 import DraggableItem from '@/components/library/DraggableItem'
+import ThemeToggle from '@/components/ui/ThemeToggle'
 
 export default function LibraryPanel() {
   const [searchTerm, setSearchTerm] = useState('')
@@ -46,6 +47,10 @@ export default function LibraryPanel() {
       {/* Header */}
       <div className="p-4 border-b border-border/50">
         <h2 className="text-lg font-semibold mb-3">Components</h2>
+        
+        <div className="mb-4">
+          <ThemeToggle />
+        </div>
         
         {/* Search */}
         <div className="relative">
