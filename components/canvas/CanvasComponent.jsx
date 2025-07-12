@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { X, Move } from 'lucide-react'
+import { X, Move, ArrowUp, ArrowDown } from 'lucide-react'
 import { useDraggable } from '@dnd-kit/core'
 import ThemedButton from '@/components/themed/ThemedButton'
 import ThemedInput from '@/components/themed/ThemedInput'
@@ -12,17 +12,18 @@ import ThemedSwitch from '@/components/themed/ThemedSwitch'
 import ThemedSlider from '@/components/themed/ThemedSlider'
 import useAppStore from '@/stores/useAppStore'
 
-export default function CanvasComponent({ id, type, props, position }) {
-  const { selectedComponentId, setSelectedComponent, removeComponent } = useAppStore()
+export default function CanvasComponent({ id, type, props, position, zIndex }) {
+  const { selectedComponentId, setSelectedComponent, removeComponent, reorderComponents } = useAppStore()
   const { attributes, listeners, setNodeRef, transform } = useDraggable({ id })
   
   const isSelected = selectedComponentId === id
   
-  const style = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-  } : {
+  const style = {
+    position: 'absolute',
     top: `${position.y}px`,
     left: `${position.x}px`,
+    zIndex,
+    ...(transform ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` } : {}),
   }
 
   const handleClick = (e) => {
@@ -33,6 +34,11 @@ export default function CanvasComponent({ id, type, props, position }) {
   const handleDelete = (e) => {
     e.stopPropagation()
     removeComponent(id)
+  }
+  
+  const handleReorder = (e, direction) => {
+    e.stopPropagation()
+    reorderComponents(id, direction)
   }
 
   const renderComponent = () => {
@@ -57,24 +63,23 @@ export default function CanvasComponent({ id, type, props, position }) {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      className={`absolute group transition-all ${isSelected ? 'component-selected' : ''}`}
+      className={`group transition-all ${isSelected ? 'component-selected' : ''}`}
       onClick={handleClick}
     >
       {/* Drag Handle and Info */}
-      <div
-        {...listeners}
-        className={`absolute -top-8 left-0 flex items-center gap-1 bg-primary/90 text-primary-foreground px-2 py-1 rounded text-xs z-10 cursor-move
-          ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}
-        `}
+      <div 
+        className={`absolute -top-8 left-0 flex items-center gap-1 bg-primary/90 text-primary-foreground px-2 py-1 rounded text-xs z-20 
+          ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
       >
-        <Move className="w-3 h-3" />
+        <div {...listeners} className="cursor-move p-1">
+          <Move className="w-3 h-3" />
+        </div>
         <span>{type}</span>
-        <button
-          onClick={handleDelete}
-          className="ml-1 p-0.5 hover:bg-white/20 rounded"
-        >
-          <X className="w-3 h-3" />
-        </button>
+        <div className="flex items-center gap-1 ml-2">
+          <button onClick={(e) => handleReorder(e, 'backward')} className="p-0.5 hover:bg-white/20 rounded"><ArrowDown className="w-3 h-3" /></button>
+          <button onClick={(e) => handleReorder(e, 'forward')} className="p-0.5 hover:bg-white/20 rounded"><ArrowUp className="w-3 h-3" /></button>
+          <button onClick={handleDelete} className="p-0.5 hover:bg-white/20 rounded"><X className="w-3 h-3" /></button>
+        </div>
       </div>
 
       {renderComponent()}

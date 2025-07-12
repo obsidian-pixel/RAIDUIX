@@ -163,13 +163,14 @@ export default function CanvasPanel() {
               </div>
             </div>
           ) : (
-            canvasComponents.map((component) => (
+            canvasComponents.map((component, index) => (
               <CanvasComponent
                 key={component.id}
                 id={component.id}
                 type={component.type}
                 props={component.props}
                 position={component.position}
+                zIndex={index}
               />
             ))
           )}

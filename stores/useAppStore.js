@@ -58,11 +58,20 @@ const useAppStore = create((set, get) => ({
     )
   })),
 
-  reorderComponents: (fromIndex, toIndex) => set((state) => {
-    const components = [...state.canvasComponents]
-    const [removed] = components.splice(fromIndex, 1)
-    components.splice(toIndex, 0, removed)
-    return { canvasComponents: components }
+  reorderComponents: (id, direction) => set((state) => {
+    const components = [...state.canvasComponents];
+    const index = components.findIndex(c => c.id === id);
+    if (index === -1) return state;
+
+    if (direction === 'forward' && index < components.length - 1) {
+      // Swap with the next element
+      [components[index], components[index + 1]] = [components[index + 1], components[index]];
+    } else if (direction === 'backward' && index > 0) {
+      // Swap with the previous element
+      [components[index], components[index - 1]] = [components[index - 1], components[index]];
+    }
+
+    return { canvasComponents: components };
   }),
 
   setSelectedComponent: (id) => set({ selectedComponentId: id }),
