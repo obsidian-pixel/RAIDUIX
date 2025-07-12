@@ -1,27 +1,28 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { DndContext } from '@dnd-kit/core'
 import LibraryPanel from '@/components/panels/LibraryPanel'
 import CanvasPanel from '@/components/panels/CanvasPanel'
 import RightPanel from '@/components/panels/RightPanel'
 import useAppStore from '@/stores/useAppStore'
 
 export default function WorkspaceLayout() {
-  const { leftPanelWidth, rightPanelWidth, setPanelWidths } = useAppStore()
+  const { leftPanelWidth, rightPanelWidth, setPanelWidths, updateComponentPosition, snapToGrid } = useAppStore()
   const [isResizing, setIsResizing] = useState(null)
   const containerRef = useRef(null)
-  
+
   const handleMouseDown = (handle) => {
     setIsResizing(handle)
   }
-  
+
   const handleMouseMove = (e) => {
     if (!isResizing || !containerRef.current) return
-    
+
     const containerRect = containerRef.current.getBoundingClientRect()
     const containerWidth = containerRect.width
     const mouseX = e.clientX - containerRect.left
-    
+
     if (isResizing === 'left') {
       const newLeftWidth = Math.max(15, Math.min(40, (mouseX / containerWidth) * 100))
       setPanelWidths(newLeftWidth, rightPanelWidth)
@@ -30,54 +31,77 @@ export default function WorkspaceLayout() {
       setPanelWidths(leftPanelWidth, newRightWidth)
     }
   }
-  
+
   const handleMouseUp = () => {
     setIsResizing(null)
   }
-  
+
+  const handleDragEnd = (event) => {
+    const { active, delta } = event
+    const id = active.id
+    
+    const component = useAppStore.getState().canvasComponents.find(c => c.id === id)
+    if (!component) return
+    
+    let newPosition = {
+      x: component.position.x + delta.x,
+      y: component.position.y + delta.y
+    }
+    
+    if (snapToGrid) {
+      const gridSize = 20
+      newPosition.x = Math.round(newPosition.x / gridSize) * gridSize
+      newPosition.y = Math.round(newPosition.y / gridSize) * gridSize
+    }
+
+    updateComponentPosition(id, newPosition)
+  }
+
   return (
-    <div 
-      ref={containerRef}
-      className="flex-1 flex relative"
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-    >
-      {/* Left Panel - Component Library */}
-      <div 
-        className="border-r border-border/50 bg-card/50"
-        style={{ width: `${leftPanelWidth}%` }}
-      >
-        <LibraryPanel />
-      </div>
-      
-      {/* Left Resize Handle */}
+    <DndContext onDragEnd={handleDragEnd}>
       <div
-        className="w-1 resize-handle cursor-col-resize"
-        onMouseDown={() => handleMouseDown('left')}
-      />
-      
-      {/* Center Panel - Canvas */}
-      <div 
-        className="flex-1 bg-background"
-        style={{ width: `${100 - leftPanelWidth - rightPanelWidth}%` }}
+        ref={containerRef}
+        className="flex-1 flex relative"
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
       >
-        <CanvasPanel />
+        {/* Left Panel - Component Library */}
+        <div
+          className="border-r border-border/50 bg-card/50"
+          style={{ width: `${leftPanelWidth}%` }}
+        >
+          <LibraryPanel />
+        </div>
+
+        {/* Left Resize Handle */}
+        <div
+          className="w-1 resize-handle cursor-col-resize"
+          onMouseDown={() => handleMouseDown('left')}
+        />
+
+        {/* Center Panel - Canvas */}
+        <div
+          className="flex-1 bg-background"
+          style={{ width: `${100 - leftPanelWidth - rightPanelWidth}%` }}
+        >
+          <CanvasPanel />
+        </div>
+
+        {/* Right Resize Handle */}
+        <div
+          className="w-1 resize-handle cursor-col-resize"
+          onMouseDown={() => handleMouseDown('right')}
+        />
+
+        {/* Right Panel - Settings & Code */}
+        <div
+          className="border-l border-border/50 bg-card/50"
+          style={{ width: `${rightPanelWidth}%` }}
+        >
+          <RightPanel />
+        </div>
       </div>
-      
-      {/* Right Resize Handle */}
-      <div
-        className="w-1 resize-handle cursor-col-resize"
-        onMouseDown={() => handleMouseDown('right')}
-      />
-      
-      {/* Right Panel - Settings & Code */}
-      <div 
-        className="border-l border-border/50 bg-card/50"
-        style={{ width: `${rightPanelWidth}%` }}
-      >
-        <RightPanel />
-      </div>
-    </div>
+    </DndContext>
   )
 }

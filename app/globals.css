@@ -232,3 +232,11 @@
   outline: 1px solid #3b82f680;
   outline-offset: 1px;
 }
+
+/* Canvas grid */
+.grid-bg {
+  --grid-color: rgba(255, 255, 255, 0.1);
+  background-image:
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+}

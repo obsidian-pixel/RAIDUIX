@@ -1,18 +1,19 @@
 'use client'
 
 import { useState } from 'react'
-import { 
-  Search, Square, Type, Image, Layout, Palette, ToggleLeft, 
+import {
+  Search, Square, Type, Image, Layout, Palette, ToggleLeft,
   BarChart3, ChevronRight, AlertTriangle, Activity,
   Table, User, Navigation, MoreHorizontal, Eye, Loader,
-  Tabs, Grid, Calendar, Upload, Play, Bell
+  Tabs, Grid, Calendar, Upload, Play, Bell, Folder, MessageSquare, PlusSquare, Sliders, ChevronsUpDown, MenuSquare, MousePointer, Move, PanelRight, Rows, Columns
 } from 'lucide-react'
 import DraggableItem from '@/components/library/DraggableItem'
 import ThemeToggle from '@/components/ui/ThemeToggle'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 export default function LibraryPanel() {
   const [searchTerm, setSearchTerm] = useState('')
-  
+
   const componentCategories = [
     {
       name: 'Basic Components',
@@ -31,27 +32,65 @@ export default function LibraryPanel() {
         { id: 'checkbox', name: 'Checkbox', icon: Square, type: 'checkbox' },
         { id: 'switch', name: 'Switch', icon: ToggleLeft, type: 'switch' },
         { id: 'slider', name: 'Slider', icon: Type, type: 'slider' },
+        { id: 'input-otp', name: 'Input OTP', icon: PlusSquare, type: 'input-otp' },
+        { id: 'toggle', name: 'Toggle', icon: ToggleLeft, type: 'toggle' },
+        { id: 'toggle-group', name: 'Toggle Group', icon: Sliders, type: 'toggle-group' },
+      ]
+    },
+    {
+      name: 'Navigation',
+      icon: Navigation,
+      items: [
+        { id: 'navigation-menu', name: 'Nav Menu', icon: MenuSquare, type: 'navigation-menu' },
+        { id: 'context-menu', name: 'Context Menu', icon: MousePointer, type: 'context-menu' },
+        { id: 'tabs', name: 'Tabs', icon: Tabs, type: 'tabs' },
+      ]
+    },
+    {
+      name: 'Layout',
+      icon: Layout,
+      items: [
+        { id: 'collapsible', name: 'Collapsible', icon: ChevronsUpDown, type: 'collapsible' },
+        { id: 'scroll-area', name: 'Scroll Area', icon: Rows, type: 'scroll-area' },
+        { id: 'sheet', name: 'Sheet', icon: PanelRight, type: 'sheet' },
+        { id: 'drawer', name: 'Drawer', icon: Columns, type: 'drawer' },
+        { id: 'hover-card', name: 'Hover Card', icon: Move, type: 'hover-card' },
+      ]
+    },
+    {
+      name: 'Feedback',
+      icon: MessageSquare,
+      items: [
+        { id: 'alert', name: 'Alert', icon: AlertTriangle, type: 'alert' },
+        { id: 'skeleton', name: 'Skeleton', icon: Layout, type: 'skeleton' },
+      ]
+    },
+    {
+      name: 'Other',
+      icon: Folder,
+      items: [
+        { id: 'command', name: 'Command', icon: Type, type: 'command' },
       ]
     }
   ]
-  
+
   const filteredCategories = componentCategories.map(category => ({
     ...category,
-    items: category.items.filter(item => 
+    items: category.items.filter(item =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
   })).filter(category => category.items.length > 0)
-  
+
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col overflow-y-auto">
       {/* Header */}
       <div className="p-4 border-b border-border/50">
         <h2 className="text-lg font-semibold mb-3">Components</h2>
-        
+
         <div className="mb-4">
           <ThemeToggle />
         </div>
-        
+
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -64,9 +103,9 @@ export default function LibraryPanel() {
           />
         </div>
       </div>
-      
+
       {/* Categories */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar p-4">
+      <ScrollArea className="flex-1 p-4">
         <div className="space-y-6">
           {filteredCategories.map((category) => (
             <div key={category.name} className="space-y-2">
@@ -74,7 +113,7 @@ export default function LibraryPanel() {
                 <category.icon className="w-4 h-4" />
                 {category.name}
               </div>
-              
+
               <div className="space-y-2">
                 {category.items.map((item) => (
                   <DraggableItem
@@ -90,14 +129,14 @@ export default function LibraryPanel() {
             </div>
           ))}
         </div>
-        
+
         {filteredCategories.length === 0 && (
           <div className="text-center py-8">
             <Search className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
             <p className="text-muted-foreground">No components found</p>
           </div>
         )}
-      </div>
+      </ScrollArea>
     </div>
   )
 }

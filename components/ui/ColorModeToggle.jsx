@@ -13,7 +13,7 @@ export default function ColorModeToggle() {
   return (
     <button
       onClick={toggleColorMode}
-      className="p-2 glass-panel rounded-lg text-muted-foreground hover:text-foreground transition-all hover:bg-accent/50"
+      className="p-1 glass-panel rounded-lg text-muted-foreground hover:text-foreground transition-all hover:bg-accent/50"
       title={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}
     >
       {colorMode === 'light' ? 

@@ -1,43 +1,58 @@
 'use client'
 
-import { useState } from 'react'
-import { Plus, Minus, RotateCcw, Smartphone, Tablet, Monitor } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Plus, Smartphone, Tablet, Monitor } from 'lucide-react'
 import CanvasComponent from '@/components/canvas/CanvasComponent'
 import useAppStore from '@/stores/useAppStore'
+import Grid from '@/components/canvas/Grid'
 
 export default function CanvasPanel() {
-  const { canvasComponents, clearCanvas } = useAppStore()
-  const [zoom, setZoom] = useState(100)
-  const [deviceMode, setDeviceMode] = useState('desktop')
+  const { 
+    canvasComponents, addComponent, updateComponentPosition,
+    clearCanvas, zoom, showGrid, snapToGrid 
+  } = useAppStore()
   
+  const [deviceMode, setDeviceMode] = useState('desktop')
+  const canvasRef = useRef(null)
+
   const deviceSizes = {
     mobile: { width: 375, name: 'Mobile' },
     tablet: { width: 768, name: 'Tablet' },
-    desktop: { width: 1200, name: 'Desktop' }
+    desktop: { width: '100%', name: 'Desktop' }
   }
-  
-  const handleZoomIn = () => setZoom(prev => Math.min(200, prev + 10))
-  const handleZoomOut = () => setZoom(prev => Math.max(50, prev - 10))
-  const handleResetZoom = () => setZoom(100)
-  
+
   const handleDragOver = (e) => {
     e.preventDefault()
     e.dataTransfer.dropEffect = 'copy'
   }
-  
+
   const handleDrop = (e) => {
     e.preventDefault()
     const componentData = JSON.parse(e.dataTransfer.getData('application/json'))
+    const canvasRect = canvasRef.current.getBoundingClientRect()
     
-    // Add component to canvas
-    const { addComponent } = useAppStore.getState()
+    // Adjust position for canvas zoom and offset
+    let newPosition = {
+      x: (e.clientX - canvasRect.left) / (zoom / 100),
+      y: (e.clientY - canvasRect.top) / (zoom / 100)
+    }
+
+    // Snap to grid logic
+    if (snapToGrid) {
+      const gridSize = 20; // The size of the grid cells
+      newPosition.x = Math.round(newPosition.x / gridSize) * gridSize;
+      newPosition.y = Math.round(newPosition.y / gridSize) * gridSize;
+    }
+
     addComponent({
       type: componentData.type,
-      props: getDefaultProps(componentData.type, componentData.chartType)
+      props: getDefaultProps(componentData.type, componentData.chartType),
+      position: newPosition
     })
   }
-  
+
   const getDefaultProps = (type, chartType) => {
+    // This function remains the same as before
     const defaults = {
       button: { label: 'Button', variant: 'default', size: 'default' },
       input: { placeholder: 'Enter text...', type: 'text' },
@@ -82,8 +97,8 @@ export default function CanvasPanel() {
           { id: 'tab3', label: 'Tab 3', content: 'Content for tab 3' }
         ] 
       }
-    }
-    return defaults[type] || {}
+    };
+    return defaults[type] || {};
   }
   
   return (
@@ -91,36 +106,8 @@ export default function CanvasPanel() {
       {/* Canvas Controls */}
       <div className="p-4 border-b border-border/50 bg-card/30">
         <div className="flex items-center justify-between">
+          <span className="text-sm text-muted-foreground">Canvas</span>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Canvas</span>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={handleZoomOut}
-                className="p-1 hover:bg-accent/50 rounded"
-                title="Zoom out"
-              >
-                <Minus className="w-4 h-4" />
-              </button>
-              <span className="text-sm min-w-[50px] text-center">{zoom}%</span>
-              <button
-                onClick={handleZoomIn}
-                className="p-1 hover:bg-accent/50 rounded"
-                title="Zoom in"
-              >
-                <Plus className="w-4 h-4" />
-              </button>
-              <button
-                onClick={handleResetZoom}
-                className="p-1 hover:bg-accent/50 rounded"
-                title="Reset zoom"
-              >
-                <RotateCcw className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            {/* Device Mode Toggle */}
             <div className="flex items-center gap-1 p-1 glass-panel rounded-lg">
               {Object.entries(deviceSizes).map(([key, { name }]) => {
                 const Icon = key === 'mobile' ? Smartphone : key === 'tablet' ? Tablet : Monitor
@@ -128,13 +115,7 @@ export default function CanvasPanel() {
                   <button
                     key={key}
                     onClick={() => setDeviceMode(key)}
-                    className={`
-                      p-1.5 rounded transition-all
-                      ${deviceMode === key 
-                        ? 'bg-primary/20 text-primary' 
-                        : 'text-muted-foreground hover:text-foreground'
-                      }
-                    `}
+                    className={`p-1.5 rounded transition-all ${deviceMode === key ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-foreground'}`}
                     title={name}
                   >
                     <Icon className="w-4 h-4" />
@@ -142,7 +123,6 @@ export default function CanvasPanel() {
                 )
               })}
             </div>
-            
             <button
               onClick={clearCanvas}
               className="px-3 py-1.5 text-sm glass-panel rounded-lg text-muted-foreground hover:text-foreground transition-all"
@@ -154,44 +134,45 @@ export default function CanvasPanel() {
       </div>
       
       {/* Canvas Area */}
-      <div className="flex-1 bg-gradient-to-br from-background to-muted/20 p-8 overflow-auto">
-        <div className="flex justify-center">
-          <div
-            className="bg-card border border-border/50 rounded-lg shadow-lg transition-all duration-300 min-h-[400px]"
-            style={{
-              width: `${deviceSizes[deviceMode].width}px`,
-              transform: `scale(${zoom / 100})`,
-              transformOrigin: 'top center'
-            }}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-          >
-            {/* Canvas Content */}
-            <div className="p-6">
-              {canvasComponents.length === 0 ? (
-                <div className="text-center py-16">
-                  <div className="w-16 h-16 bg-muted/50 rounded-full mx-auto mb-4 flex items-center justify-center">
-                    <Plus className="w-8 h-8 text-muted-foreground" />
-                  </div>
-                  <p className="text-muted-foreground mb-2">Drag components here</p>
-                  <p className="text-sm text-muted-foreground">
-                    Start building your UI by dragging components from the library
-                  </p>
+      <div 
+        className="flex-1 overflow-auto bg-background"
+      >
+        <div
+          ref={canvasRef}
+          className="relative bg-card mx-auto my-8 transition-all duration-300"
+          style={{
+            width: deviceSizes[deviceMode].width,
+            transform: `scale(${zoom / 100})`,
+            transformOrigin: 'top center',
+            minHeight: 'calc(100% - 4rem)'
+          }}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+        >
+          {showGrid && <Grid zoom={zoom} />}
+          {canvasComponents.length === 0 ? (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-muted/50 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <Plus className="w-8 h-8 text-muted-foreground" />
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  {canvasComponents.map((component) => (
-                    <CanvasComponent
-                      key={component.id}
-                      id={component.id}
-                      type={component.type}
-                      props={component.props}
-                    />
-                  ))}
-                </div>
-              )}
+                <p className="text-muted-foreground mb-2">Drag components here</p>
+                <p className="text-sm text-muted-foreground">
+                  Start building your UI by dragging components from the library
+                </p>
+              </div>
             </div>
-          </div>
+          ) : (
+            canvasComponents.map((component) => (
+              <CanvasComponent
+                key={component.id}
+                id={component.id}
+                type={component.type}
+                props={component.props}
+                position={component.position}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

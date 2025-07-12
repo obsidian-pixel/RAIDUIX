@@ -8,25 +8,32 @@ import ThemedBadge from '@/components/themed/ThemedBadge'
 import ThemedCheckbox from '@/components/themed/ThemedCheckbox'
 import ThemedSwitch from '@/components/themed/ThemedSwitch'
 import ThemedSlider from '@/components/themed/ThemedSlider'
+// Import other themed components as they are created
+// For example:
+// import ThemedAlert from '@/components/themed/ThemedAlert'
+// import ThemedTable from '@/components/themed/ThemedTable'
+// etc.
 
 export default function DraggableItem({ id, name, type, icon: Icon, chartType }) {
   const [isDragging, setIsDragging] = useState(false)
-  
+
   const handleDragStart = (e) => {
     setIsDragging(true)
     e.dataTransfer.setData('application/json', JSON.stringify({
       id,
       name,
       type,
-      chartType
+      chartType,
+      // Pass the component's JSX for dropping
+      component: e.currentTarget.outerHTML
     }))
     e.dataTransfer.effectAllowed = 'copy'
   }
-  
+
   const handleDragEnd = () => {
     setIsDragging(false)
   }
-  
+
   const renderPreview = () => {
     const previewProps = {
       button: { label: 'Button', size: 'sm' },
@@ -35,11 +42,12 @@ export default function DraggableItem({ id, name, type, icon: Icon, chartType })
       badge: { text: 'Badge', size: 'sm' },
       checkbox: { label: 'Checkbox', size: 'sm' },
       switch: { label: 'Switch', size: 'sm' },
-      slider: { value: 50, size: 'sm' }
+      slider: { value: 50, size: 'sm' },
+      // Add preview props for new components here as they are created
     }
-    
+
     const props = previewProps[type] || {}
-    
+
     try {
       switch (type) {
         case 'button':
@@ -56,14 +64,26 @@ export default function DraggableItem({ id, name, type, icon: Icon, chartType })
           return <ThemedSwitch {...props} />
         case 'slider':
           return <ThemedSlider {...props} />
+        // Add cases for new components as they are created
+        // e.g. case 'alert': return <ThemedAlert {...props} />
         default:
-          return <div className="w-full h-8 bg-muted/50 rounded flex items-center justify-center text-xs text-muted-foreground">Preview</div>
+          // Fallback for components without a specific preview
+          return (
+            <div className="w-full h-8 bg-muted/50 rounded flex items-center justify-center text-xs text-muted-foreground">
+              {name} Preview
+            </div>
+          )
       }
     } catch (error) {
-      return <div className="w-full h-8 bg-muted/50 rounded flex items-center justify-center text-xs text-muted-foreground">Preview</div>
+      console.error(`Error rendering preview for ${type}:`, error)
+      return (
+        <div className="w-full h-8 bg-destructive/20 rounded flex items-center justify-center text-xs text-destructive-foreground">
+          Preview Error
+        </div>
+      )
     }
   }
-  
+
   return (
     <div
       draggable
@@ -77,12 +97,12 @@ export default function DraggableItem({ id, name, type, icon: Icon, chartType })
     >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          <Icon className="w-4 h-4 text-muted-foreground" />
+          {Icon && <Icon className="w-4 h-4 text-muted-foreground" />}
           <span className="text-sm font-medium">{name}</span>
         </div>
         <div className="w-1 h-1 bg-muted-foreground/50 rounded-full group-hover:bg-muted-foreground transition-colors" />
       </div>
-      
+
       {/* Preview */}
       <div className="pointer-events-none overflow-hidden">
         {renderPreview()}
