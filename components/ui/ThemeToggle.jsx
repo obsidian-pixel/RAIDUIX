@@ -1,36 +1,45 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Palette, Droplets, Box } from 'lucide-react'
-import useAppStore from '@/stores/useAppStore'
+import { useState } from "react";
+import { Palette, Droplets, Box } from "lucide-react";
+import useAppStore from "@/stores/useAppStore";
 
 export default function ThemeToggle() {
-  const { activeTheme, setActiveTheme } = useAppStore()
-  
+  const { activeTheme, setActiveTheme } = useAppStore();
+
   const themes = [
-    { id: 'material', name: 'Neo-Material', icon: Box },
-    { id: 'glass', name: 'Glass', icon: Droplets },
-    { id: 'skeuo', name: 'Skeuo', icon: Palette }
-  ]
-  
+    { id: "material", name: "Material", icon: Box },
+    { id: "glass", name: "Glass", icon: Droplets },
+    { id: "skeuo", name: "Skeuo", icon: Palette },
+  ];
+
   return (
-    <div className="flex items-center gap-1 p-1 glass-panel rounded-lg">
+    <div
+      className="flex items-center p-2 glass-panel rounded-lg border border-border/40 shadow-sm w-full max-w-md mx-auto gap-2 overflow-x-auto custom-scrollbar"
+      style={{ WebkitOverflowScrolling: "touch", minHeight: "48px" }}
+    >
       {themes.map(({ id, name, icon: Icon }) => (
         <button
           key={id}
           onClick={() => setActiveTheme(id)}
           className={`
-            flex items-center gap-2 px-3 py-1.5 rounded-md transition-all text-sm font-medium
-            ${activeTheme === id 
-              ? 'bg-primary/20 text-primary shadow-sm' 
-              : 'text-muted-foreground hover:text-foreground hover:bg-accent/50'
+            flex items-center gap-2 px-4 py-2 rounded-md transition-all text-base font-medium outline-none min-w-[120px] max-w-xs
+            focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2
+            ${
+              activeTheme === id
+                ? "bg-primary/10 text-primary shadow border border-primary/30"
+                : "text-muted-foreground hover:text-foreground hover:bg-accent/30 border border-transparent"
             }
           `}
+          tabIndex={0}
+          aria-pressed={activeTheme === id}
         >
-          <Icon className="w-4 h-4" />
-          {name}
+          <Icon className="w-5 h-5 shrink-0" />
+          <span className="whitespace-nowrap truncate max-w-[100px]">
+            {name}
+          </span>
         </button>
       ))}
     </div>
-  )
+  );
 }
