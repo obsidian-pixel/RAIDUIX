@@ -201,18 +201,99 @@ body,
 }
 
 /* Resize handle */
+
+/* Panel vertical resize handle (between panels) */
 .resize-handle {
-  background: rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease;
+  width: 8px;
+  min-width: 8px;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(59, 130, 246, 0.12) 0%,
+    rgba(59, 130, 246, 0.18) 100%
+  );
   cursor: col-resize;
+  z-index: 20;
+  transition: background 0.2s;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
 .resize-handle:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: linear-gradient(
+    to right,
+    rgba(59, 130, 246, 0.22) 0%,
+    rgba(59, 130, 246, 0.32) 100%
+  );
+}
+.resize-handle:active {
+  background: linear-gradient(
+    to right,
+    rgba(59, 130, 246, 0.32) 0%,
+    rgba(59, 130, 246, 0.42) 100%
+  );
 }
 
-.resize-handle:active {
-  background: rgba(255, 255, 255, 0.3);
+/* Canvas item resize handles (corners/edges) */
+.canvas-resize-handle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: rgba(59, 130, 246, 0.7);
+  border-radius: 50%;
+  z-index: 10;
+  transition: background 0.2s ease;
+}
+.canvas-resize-handle:hover {
+  background: rgba(59, 130, 246, 0.9);
+}
+.canvas-resize-handle:active {
+  background: rgba(59, 130, 246, 1);
+}
+.canvas-resize-handle.top-left {
+  top: -6px;
+  left: -6px;
+  cursor: nwse-resize;
+}
+.canvas-resize-handle.top-right {
+  top: -6px;
+  right: -6px;
+  cursor: nesw-resize;
+}
+.canvas-resize-handle.bottom-left {
+  bottom: -6px;
+  left: -6px;
+  cursor: nesw-resize;
+}
+.canvas-resize-handle.bottom-right {
+  bottom: -6px;
+  right: -6px;
+  cursor: nwse-resize;
+}
+.canvas-resize-handle.top {
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: ns-resize;
+}
+.canvas-resize-handle.bottom {
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: ns-resize;
+}
+.canvas-resize-handle.left {
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: ew-resize;
+}
+.canvas-resize-handle.right {
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: ew-resize;
 }
 
 /* Transitions */

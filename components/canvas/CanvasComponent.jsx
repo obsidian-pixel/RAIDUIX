@@ -26,9 +26,11 @@ export default function CanvasComponent({ id, type, props, position, zIndex }) {
 
   const isSelected = selectedComponentId === id;
   const componentData = canvasComponents?.find((c) => c.id === id) || {};
+  // Always use explicit pixel values for width/height to ensure resizability
   const [size, setSize] = useState({
-    width: componentData.width || 200,
-    height: componentData.height || 80,
+    width: typeof componentData.width === "number" ? componentData.width : 200,
+    height:
+      typeof componentData.height === "number" ? componentData.height : 80,
   });
   const [resizing, setResizing] = useState(null);
 
@@ -39,6 +41,11 @@ export default function CanvasComponent({ id, type, props, position, zIndex }) {
     zIndex,
     width: `${size.width}px`,
     height: `${size.height}px`,
+    minWidth: 40,
+    minHeight: 30,
+    maxWidth: 1200,
+    maxHeight: 1000,
+    boxSizing: "border-box",
     ...(transform
       ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` }
       : {}),
@@ -60,10 +67,11 @@ export default function CanvasComponent({ id, type, props, position, zIndex }) {
   };
 
   // Resize logic
-  const handleResizeStart = (corner, e) => {
+  // Accepts: 'top-left', 'top', 'top-right', 'right', 'bottom-right', 'bottom', 'bottom-left', 'left'
+  const handleResizeStart = (edge, e) => {
     e.stopPropagation();
     setResizing({
-      corner,
+      edge,
       startX: e.clientX,
       startY: e.clientY,
       startWidth: size.width,
@@ -71,18 +79,35 @@ export default function CanvasComponent({ id, type, props, position, zIndex }) {
       startTop: position.y,
       startLeft: position.x,
     });
-    let cursor = "nwse-resize";
-    if (corner === "top-left" || corner === "bottom-right")
-      cursor = "nwse-resize";
-    if (corner === "top-right" || corner === "bottom-left")
-      cursor = "nesw-resize";
+    // Set cursor for edge/corner
+    let cursor = "default";
+    switch (edge) {
+      case "top-left":
+      case "bottom-right":
+        cursor = "nwse-resize";
+        break;
+      case "top-right":
+      case "bottom-left":
+        cursor = "nesw-resize";
+        break;
+      case "top":
+      case "bottom":
+        cursor = "ns-resize";
+        break;
+      case "left":
+      case "right":
+        cursor = "ew-resize";
+        break;
+      default:
+        cursor = "default";
+    }
     document.body.style.cursor = cursor;
   };
 
   const handleResize = (e) => {
     if (!resizing) return;
     const {
-      corner,
+      edge,
       startX,
       startY,
       startWidth,
@@ -96,23 +121,43 @@ export default function CanvasComponent({ id, type, props, position, zIndex }) {
     let newHeight = startHeight;
     let newTop = startTop;
     let newLeft = startLeft;
-    // Always update both width and height for all corners
-    if (corner === "top-left") {
-      newWidth = Math.max(40, startWidth - deltaX);
-      newHeight = Math.max(30, startHeight - deltaY);
-      newLeft = startLeft + deltaX;
-      newTop = startTop + deltaY;
-    } else if (corner === "top-right") {
-      newWidth = Math.max(40, startWidth + deltaX);
-      newHeight = Math.max(30, startHeight - deltaY);
-      newTop = startTop + deltaY;
-    } else if (corner === "bottom-left") {
-      newWidth = Math.max(40, startWidth - deltaX);
-      newHeight = Math.max(30, startHeight + deltaY);
-      newLeft = startLeft + deltaX;
-    } else if (corner === "bottom-right") {
-      newWidth = Math.max(40, startWidth + deltaX);
-      newHeight = Math.max(30, startHeight + deltaY);
+    switch (edge) {
+      case "top-left":
+        newWidth = Math.max(40, startWidth - deltaX);
+        newHeight = Math.max(30, startHeight - deltaY);
+        newLeft = startLeft + deltaX;
+        newTop = startTop + deltaY;
+        break;
+      case "top":
+        newHeight = Math.max(30, startHeight - deltaY);
+        newTop = startTop + deltaY;
+        break;
+      case "top-right":
+        newWidth = Math.max(40, startWidth + deltaX);
+        newHeight = Math.max(30, startHeight - deltaY);
+        newTop = startTop + deltaY;
+        break;
+      case "right":
+        newWidth = Math.max(40, startWidth + deltaX);
+        break;
+      case "bottom-right":
+        newWidth = Math.max(40, startWidth + deltaX);
+        newHeight = Math.max(30, startHeight + deltaY);
+        break;
+      case "bottom":
+        newHeight = Math.max(30, startHeight + deltaY);
+        break;
+      case "bottom-left":
+        newWidth = Math.max(40, startWidth - deltaX);
+        newHeight = Math.max(30, startHeight + deltaY);
+        newLeft = startLeft + deltaX;
+        break;
+      case "left":
+        newWidth = Math.max(40, startWidth - deltaX);
+        newLeft = startLeft + deltaX;
+        break;
+      default:
+        break;
     }
     setSize({ width: newWidth, height: newHeight });
     if (updateComponentSize)
@@ -122,11 +167,11 @@ export default function CanvasComponent({ id, type, props, position, zIndex }) {
         x: newLeft,
         y: newTop,
       });
-    // Always update position for left/top corners
-    if (["top-left", "bottom-left"].includes(corner)) {
+    // Always update position for left/top edges
+    if (["top-left", "bottom-left", "left"].includes(edge)) {
       position.x = newLeft;
     }
-    if (["top-left", "top-right"].includes(corner)) {
+    if (["top-left", "top-right", "top"].includes(edge)) {
       position.y = newTop;
     }
   };
@@ -192,7 +237,7 @@ export default function CanvasComponent({ id, type, props, position, zIndex }) {
         try {
           const ThemedComponent =
             require(`@/components/themed/Themed${themedType}`).default;
-          return <ThemedComponent {...props} />;
+          return <ThemedComponent {...props} fillParent={true} />;
         } catch (err) {
           // fallback to text if import fails
         }
@@ -249,28 +294,42 @@ export default function CanvasComponent({ id, type, props, position, zIndex }) {
         </div>
       </div>
 
-      {/* Resize handles (corners) */}
+      {/* Resize handles (corners & edges) */}
       {isSelected && (
         <>
-          {/* Top-left */}
+          {/* Corners */}
           <div
-            className="absolute top-0 left-0 w-3 h-3 bg-blue-500 rounded-full cursor-nw-resize z-30"
+            className="canvas-resize-handle top-left"
             onMouseDown={(e) => handleResizeStart("top-left", e)}
           />
-          {/* Top-right */}
           <div
-            className="absolute top-0 right-0 w-3 h-3 bg-blue-500 rounded-full cursor-ne-resize z-30"
+            className="canvas-resize-handle top-right"
             onMouseDown={(e) => handleResizeStart("top-right", e)}
           />
-          {/* Bottom-left */}
           <div
-            className="absolute bottom-0 left-0 w-3 h-3 bg-blue-500 rounded-full cursor-sw-resize z-30"
+            className="canvas-resize-handle bottom-left"
             onMouseDown={(e) => handleResizeStart("bottom-left", e)}
           />
-          {/* Bottom-right */}
           <div
-            className="absolute bottom-0 right-0 w-3 h-3 bg-blue-500 rounded-full cursor-se-resize z-30"
+            className="canvas-resize-handle bottom-right"
             onMouseDown={(e) => handleResizeStart("bottom-right", e)}
+          />
+          {/* Edges */}
+          <div
+            className="canvas-resize-handle top"
+            onMouseDown={(e) => handleResizeStart("top", e)}
+          />
+          <div
+            className="canvas-resize-handle bottom"
+            onMouseDown={(e) => handleResizeStart("bottom", e)}
+          />
+          <div
+            className="canvas-resize-handle left"
+            onMouseDown={(e) => handleResizeStart("left", e)}
+          />
+          <div
+            className="canvas-resize-handle right"
+            onMouseDown={(e) => handleResizeStart("right", e)}
           />
         </>
       )}
