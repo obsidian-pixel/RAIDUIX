@@ -146,8 +146,14 @@ export default function ChangelogPage() {
               className="h-12 w-12 object-contain drop-shadow-lg"
               style={{ background: "transparent" }}
             />
-            <Button asChild variant="ghost" className="glass-button px-4 py-2">
-              <a href="/">← Back to Workspace</a>
+            <Button
+              asChild
+              variant="ghost"
+              className="glass-button px-4 py-2 bg-[#23283a] hover:bg-[#2d3347]"
+            >
+              <a href="/" className="text-white">
+                ← Back to Workspace
+              </a>
             </Button>
           </div>
           <div className="flex items-center gap-2">
@@ -155,20 +161,33 @@ export default function ChangelogPage() {
               href="https://x.com/raiduix"
               target="_blank"
               rel="noopener noreferrer"
-              className="glass-button rounded-lg px-3 py-2 text-blue-200 hover:text-blue-100 transition-all"
+              className="glass-button rounded-lg px-3 py-2 text-blue-200 hover:text-blue-100 hover:bg-[#2d3347] transition-all flex items-center justify-center"
+              style={{ height: 40 }}
             >
-              Twitter
+              <img
+                src="/x-logo-white.png"
+                alt="Twitter/X"
+                className="h-6 w-6 object-contain"
+                style={{ display: "block" }}
+              />
             </a>
             <a
               href="mailto:dev.raiduix@outlook.com"
-              className="glass-button rounded-lg px-3 py-2 text-blue-200 hover:text-blue-100 transition-all"
+              className="glass-button rounded-lg px-3 py-2 text-blue-200 hover:text-blue-100 hover:bg-[#2d3347] transition-all flex items-center justify-center"
+              style={{ height: 40 }}
             >
-              Email
+              <img
+                src="/mail-icon-black.png"
+                alt="Email"
+                className="h-6 w-6 object-contain"
+                style={{ display: "block", filter: "invert(1) brightness(2)" }}
+              />
             </a>
             <Button
               variant="outline"
-              className="ml-2 px-4 py-2 border-blue-400/30 text-blue-100 hover:bg-blue-900/30"
+              className="ml-2 px-4 py-2 border-none text-white font-semibold bg-gradient-to-br from-pink-600 via-fuchsia-700 to-red-700 shadow-lg hover:from-pink-700 hover:via-fuchsia-800 hover:to-red-800 focus:ring-2 focus:ring-pink-400 focus:outline-none transition-all"
               onClick={() => setShowBugModal(true)}
+              style={{ boxShadow: "0 2px 12px 0 rgba(236, 72, 153, 0.25)" }}
             >
               Report Bug
             </Button>
