@@ -1,25 +1,27 @@
-'use client'
+"use client";
 
-import { Moon, Sun } from 'lucide-react'
-import useAppStore from '@/stores/useAppStore'
+import { Moon, Sun } from "lucide-react";
+import useAppStore from "@/stores/useAppStore";
 
 export default function ColorModeToggle() {
-  const { colorMode, setColorMode } = useAppStore()
-  
+  const { colorMode, setColorMode } = useAppStore();
+
   const toggleColorMode = () => {
-    setColorMode(colorMode === 'light' ? 'dark' : 'light')
-  }
-  
+    setColorMode(colorMode === "light" ? "dark" : "light");
+  };
+
   return (
     <button
       onClick={toggleColorMode}
-      className="p-1 glass-panel rounded-lg text-muted-foreground hover:text-foreground transition-all hover:bg-accent/50"
-      title={`Switch to ${colorMode === 'light' ? 'dark' : 'light'} mode`}
+      className="header-icon-button p-2 rounded-lg flex items-center justify-center"
+      title={`Switch to ${colorMode === "light" ? "dark" : "light"} mode`}
+      style={{ height: 40, width: 40 }}
     >
-      {colorMode === 'light' ? 
-        <Moon className="w-5 h-5" /> : 
+      {colorMode === "light" ? (
+        <Moon className="w-5 h-5" />
+      ) : (
         <Sun className="w-5 h-5" />
-      }
+      )}
     </button>
-  )
+  );
 }

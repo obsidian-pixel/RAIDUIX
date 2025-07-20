@@ -1,3 +1,142 @@
+/* Social icon color swap: black in light, white in dark */
+.social-icon {
+  filter: none;
+  transition: filter 0.2s;
+}
+.dark .social-icon {
+  filter: brightness(0) invert(1);
+}
+/* Utility: invert icons in light mode only */
+.filter-invert-on-light {
+  filter: invert(1) brightness(0.8) !important;
+}
+.dark .filter-invert-on-light {
+  filter: none !important;
+}
+/* Custom scrollbar for article content */
+.article-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+.article-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+.article-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.3);
+  border-radius: 4px;
+}
+.article-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.5);
+}
+/* Markdown readability improvements */
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.markdown-body h1 {
+  font-size: 1.6rem;
+}
+.markdown-body p {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+.markdown-body ul,
+.markdown-body ol {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+  list-style-type: disc;
+}
+.markdown-body ol {
+  list-style-type: decimal;
+}
+/* Theme-aware code blocks */
+.markdown-body pre,
+.markdown-body .pre-light {
+  background: #f6f8fa;
+  color: #23272e;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  transition: background 0.2s, color 0.2s;
+}
+.markdown-body .pre-dark {
+  background: #181c24;
+  color: #e2e8f0;
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  transition: background 0.2s, color 0.2s;
+}
+.markdown-body code,
+.markdown-body .code-light {
+  background: #f6f8fa;
+  color: #23272e;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.95em;
+  transition: background 0.2s, color 0.2s;
+}
+.markdown-body .code-dark {
+  background: #23283a;
+  color: #e2e8f0;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.95em;
+  transition: background 0.2s, color 0.2s;
+}
+/* Markdown readability improvements */
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+.markdown-body p {
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.markdown-body ul,
+.markdown-body ol {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+}
+/* Code block styles for light and dark mode */
+.markdown-body pre {
+  background: #f6f8fa;
+  color: #23272e;
+  padding: 1.1rem 1.2rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  font-size: 1.05em;
+  box-shadow: 0 2px 12px 0 rgba(31, 38, 135, 0.07);
+  border: 1px solid #e5e7eb;
+  transition: background 0.2s, color 0.2s;
+}
+.markdown-body code {
+  background: transparent;
+  color: #23272e;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.97em;
+  transition: background 0.2s, color 0.2s;
+}
+.dark .markdown-body pre {
+  background: #181c24;
+  color: #e2e8f0;
+  border: 1px solid #23283a;
+  box-shadow: 0 2px 12px 0 rgba(31, 38, 135, 0.18);
+}
+.dark .markdown-body code {
+  background: transparent;
+  color: #e2e8f0;
+}
 /* Disable text selection and highlighting for the entire page */
 html,
 body,
@@ -96,10 +235,30 @@ body,
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.glass-button {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+/* Header icon button (socials, theme toggle) - improved glassy look */
+.header-icon-button {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1.5px solid rgba(180, 180, 200, 0.32);
+  box-shadow: 0 2px 10px 0 rgba(31, 38, 135, 0.1);
+  backdrop-filter: blur(10px);
+  transition: background 0.2s, border 0.2s, box-shadow 0.2s;
+}
+.header-icon-button:hover,
+.header-icon-button:focus {
+  background: rgba(240, 240, 245, 0.92);
+  border: 1.5px solid rgba(120, 120, 140, 0.32);
+  box-shadow: 0 4px 16px 0 rgba(120, 120, 140, 0.13);
+}
+.dark .header-icon-button {
+  background: rgba(35, 40, 58, 0.7);
+  border: 1.5px solid rgba(59, 130, 246, 0.22);
+  box-shadow: 0 2px 10px 0 rgba(31, 38, 135, 0.18);
+}
+.dark .header-icon-button:hover,
+.dark .header-icon-button:focus {
+  background: rgba(59, 130, 246, 0.18);
+  border: 1.5px solid rgba(59, 130, 246, 0.32);
+  box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.22);
 }
 
 .glass-input {
