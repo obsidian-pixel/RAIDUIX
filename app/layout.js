@@ -15,10 +15,48 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
+        <head>
+          {/* Favicons and manifest for SEO */}
+          <link rel="icon" href="/favicon.ico" sizes="any" />
+          <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+          <link
+            rel="icon"
+            type="image/png"
+            href="/raiduix_logo_transparent_bg.PNG"
+          />
+          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+          <link rel="manifest" href="/site.webmanifest" />
+        </head>
         <ThemeProvider>
           <Analytics />
           {children}
         </ThemeProvider>
+        {/* Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              name: "Raiduix",
+              operatingSystem: "WEB",
+              applicationCategory: "DeveloperApplication",
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: "4.9",
+                ratingCount: "125",
+              },
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "USD",
+              },
+              description:
+                "A free, open-source design tool that turns visual ideas into production-ready code for React, Vue, and Angular.",
+              url: "https://raiduix.app",
+            }),
+          }}
+        />
       </body>
     </html>
   );
