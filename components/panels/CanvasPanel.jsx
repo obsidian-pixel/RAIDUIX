@@ -18,7 +18,64 @@ export default function CanvasPanel() {
     setSelectedComponent,
     canvasBg,
     gridSize,
+    gridColorMode,
   } = useAppStore();
+  // Utility: get luminance from hex color
+  // Improved luminance detection for hex, rgb, hsl, and theme backgrounds
+  function getLuminance(color) {
+    if (!color) return 1; // treat theme as light
+    // Handle theme backgrounds (useAppStore default: null)
+    if (color === null || color === undefined) {
+      // Try to detect dark mode from document
+      if (
+        typeof window !== "undefined" &&
+        document.documentElement.classList.contains("dark")
+      ) {
+        return 0; // dark theme
+      }
+      return 1; // light theme
+    }
+    // Hex color
+    if (color[0] === "#") {
+      let c = color.replace("#", "");
+      if (c.length === 3)
+        c = c
+          .split("")
+          .map((x) => x + x)
+          .join("");
+      const r = parseInt(c.substring(0, 2), 16) / 255;
+      const g = parseInt(c.substring(2, 4), 16) / 255;
+      const b = parseInt(c.substring(4, 6), 16) / 255;
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+    // rgb/rgba color
+    if (color.startsWith("rgb")) {
+      const vals = color.match(/\d+/g);
+      if (vals && vals.length >= 3) {
+        const r = parseInt(vals[0]) / 255;
+        const g = parseInt(vals[1]) / 255;
+        const b = parseInt(vals[2]) / 255;
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      }
+    }
+    // hsl/hsla color
+    if (color.startsWith("hsl")) {
+      const vals = color.match(/\d+/g);
+      if (vals && vals.length >= 3) {
+        const l = parseInt(vals[2]) / 100;
+        return l; // hsl luminance is just lightness
+      }
+    }
+    // Fallback: treat as light
+    return 1;
+  }
+  const luminance = getLuminance(canvasBg);
+  // Use a more robust threshold (0.5 is standard)
+  const isLightBg = luminance > 0.5;
+  let gridColor;
+  if (gridColorMode === "dark") gridColor = "rgba(255,255,255,0.18)";
+  else if (gridColorMode === "light") gridColor = "rgba(0,0,0,0.12)";
+  else gridColor = isLightBg ? "rgba(0,0,0,0.12)" : "rgba(255,255,255,0.18)";
 
   const [deviceMode, setDeviceMode] = useState("desktop");
   const canvasRef = useRef(null);
@@ -168,18 +225,22 @@ export default function CanvasPanel() {
       <div className="flex-1 overflow-auto bg-background">
         <div
           ref={canvasRef}
-          className="relative mx-auto my-8 transition-all duration-300"
+          className={`relative mx-auto my-8 transition-all duration-300${
+            !canvasBg ? " bg-background" : ""
+          }`}
           style={{
             width: deviceSizes[deviceMode].width,
             transform: `scale(${zoom / 100})`,
             transformOrigin: "top center",
             minHeight: "calc(100% - 4rem)",
-            background: canvasBg,
+            ...(canvasBg ? { background: canvasBg } : {}),
           }}
           onDragOver={handleDragOver}
           onDrop={handleDrop}
         >
-          {showGrid && <Grid zoom={zoom} gridSize={gridSize} />}
+          {showGrid && (
+            <Grid zoom={zoom} gridSize={gridSize} gridColor={gridColor} />
+          )}
           {canvasComponents.length === 0 ? (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="text-center">

@@ -86,40 +86,43 @@ export default function WorkspaceLayout() {
         onMouseLeave={handleMouseUp}
       >
         {/* Left Panel - Component Library */}
-        {leftPanelCollapsed ? (
-          <button
-            className="absolute left-0 top-1/2 z-30 -translate-y-1/2 bg-card/80 border border-border/50 rounded-r px-1 py-2 shadow hover:bg-accent transition"
-            style={{ minWidth: 0 }}
-            onClick={() => setLeftPanelCollapsed(false)}
-            aria-label="Show Library Panel"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
-        ) : (
+        {/* Left Panel Collapse/Expand Button - attached to top right outside panel */}
+        {!leftPanelCollapsed && (
           <div
-            className="border-r border-border/50 bg-card/50 relative flex flex-col"
+            className="border-r border-border/50 bg-card/50 relative flex flex-col min-w-0"
             style={{
               width: `${leftPanelWidth}%`,
               minWidth: 40,
               transition: "width 0.2s",
             }}
           >
+            {/* Collapse button at top right OUTSIDE panel */}
             <button
-              className="absolute right-0 top-1/2 z-30 -translate-y-1/2 bg-card/80 border border-border/50 rounded-l px-1 py-2 shadow hover:bg-accent transition"
-              style={{ minWidth: 0 }}
+              className="absolute -right-[45px] top-[70px] z-40 glass-panel border shadow-md rounded-sm w-9 h-9 flex items-center justify-center hover:bg-accent/70 transition-all focus:outline-none focus:ring-2 focus:ring-primary/40"
+              style={{ boxShadow: "0 2px 8px 0 rgba(0,0,0,0.10)" }}
               onClick={() => setLeftPanelCollapsed(true)}
               aria-label="Hide Library Panel"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-5 h-5" />
             </button>
             <LibraryPanel />
           </div>
+        )}
+        {leftPanelCollapsed && (
+          <button
+            className="absolute left-0 top-[70px] z-40 glass-panel border shadow-md rounded-sm w-9 h-9 flex items-center justify-center hover:bg-accent/70 transition-all focus:outline-none focus:ring-2 focus:ring-primary/40"
+            style={{ boxShadow: "0 2px 8px 0 rgba(0,0,0,0.10)" }}
+            onClick={() => setLeftPanelCollapsed(false)}
+            aria-label="Show Library Panel"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         )}
 
         {/* Left Resize Handle */}
         {!leftPanelCollapsed && (
           <div
-            className="w-1 resize-handle cursor-col-resize"
+            className="w-[2px] resize-handle min-w-0 cursor-col-resize"
             onMouseDown={() => handleMouseDown("left")}
           />
         )}
@@ -151,16 +154,8 @@ export default function WorkspaceLayout() {
         )}
 
         {/* Right Panel - Settings & Code */}
-        {rightPanelCollapsed ? (
-          <button
-            className="absolute right-0 top-1/2 z-30 -translate-y-1/2 bg-card/80 border border-border/50 rounded-l px-1 py-2 shadow hover:bg-accent transition"
-            style={{ minWidth: 0 }}
-            onClick={() => setRightPanelCollapsed(false)}
-            aria-label="Show Right Panel"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-        ) : (
+        {/* Right Panel Collapse/Expand Button - attached to top left outside panel */}
+        {!rightPanelCollapsed && (
           <div
             className="border-l border-border/50 bg-card/50 relative flex flex-col"
             style={{
@@ -169,16 +164,27 @@ export default function WorkspaceLayout() {
               transition: "width 0.2s",
             }}
           >
+            {/* Collapse button at top left OUTSIDE panel */}
             <button
-              className="absolute left-0 top-1/2 z-30 -translate-y-1/2 bg-card/80 border border-border/50 rounded-r px-1 py-2 shadow hover:bg-accent transition"
-              style={{ minWidth: 0 }}
+              className="absolute -left-[44px] top-[70px] z-40 glass-panel border shadow-md rounded-sm w-9 h-9 flex items-center justify-center hover:bg-accent/70 transition-all focus:outline-none focus:ring-2 focus:ring-primary/40"
+              style={{ boxShadow: "0 2px 8px 0 rgba(0,0,0,0.10)" }}
               onClick={() => setRightPanelCollapsed(true)}
               aria-label="Hide Right Panel"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-5 h-5" />
             </button>
             <RightPanel />
           </div>
+        )}
+        {rightPanelCollapsed && (
+          <button
+            className="absolute right-0 top-[70px] z-40 glass-panel border shadow-md rounded-sm w-9 h-9 flex items-center justify-center hover:bg-accent/70 transition-all focus:outline-none focus:ring-2 focus:ring-primary/40"
+            style={{ boxShadow: "0 2px 8px 0 rgba(0,0,0,0.10)" }}
+            onClick={() => setRightPanelCollapsed(false)}
+            aria-label="Show Right Panel"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
         )}
       </div>
     </DndContext>

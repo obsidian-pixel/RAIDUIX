@@ -149,7 +149,7 @@ export default function LibraryPanel() {
   return (
     <div
       className="flex flex-col min-w-0 min-h-0 bg-background border-r border-border/30"
-      style={{ maxHeight: "calc(100vh - 64px)", height: "calc(100vh - 64px)" }}
+      style={{ height: "calc(100vh - 64px)", maxHeight: "calc(100vh - 64px)" }}
     >
       {/* Header */}
       <div
@@ -164,13 +164,22 @@ export default function LibraryPanel() {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Search
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground"
+            style={{
+              filter: "none",
+              backdropFilter: "none",
+              opacity: 1,
+              zIndex: 2,
+            }}
+          />
           <input
             type="text"
             placeholder="Search components..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 glass-input rounded-lg text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+            style={{ position: "relative", zIndex: 1 }}
           />
         </div>
       </div>
@@ -178,30 +187,28 @@ export default function LibraryPanel() {
       {/* Categories */}
       <ScrollArea
         className="flex-1 w-full min-h-0 min-w-0 overflow-y-auto p-4"
-        style={{ maxHeight: "calc(100vh - 64px)" }}
+        style={{ maxWidth: "100%", maxHeight: "calc(100vh - 64px)" }}
       >
         <div className="space-y-8 min-w-0 w-full">
           {filteredCategories.map((category) => (
-            <div key={category.name} className="space-y-3 min-w-0">
-              <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground mb-1">
+            <div key={category.name} className="space-y-3 min-w-0 w-full">
+              <div className="flex items-center gap-2 text-sm font-semibold min-w-0 text-muted-foreground mb-1">
                 <category.icon className="w-4 h-4 shrink-0" />
                 <span className="truncate">{category.name}</span>
               </div>
 
-              <div className="flex flex-col gap-3 w-full">
+              <div className="flex flex-col gap-3 w-full min-w-0">
                 {category.items.map((item) => (
-                  <div className="w-full min-w-0">
-                    <div className="bg-card rounded-xl shadow border border-border/30 p-4 flex items-center min-w-0 w-full transition hover:shadow-md">
-                      <DraggableItem
-                        key={item.id}
-                        id={item.id}
-                        name={item.name}
-                        type={item.type}
-                        icon={item.icon}
-                        chartType={item.chartType}
-                        className="w-full min-w-0"
-                      />
-                    </div>
+                  <div className="min-w-0 flex-shrink-0">
+                    <DraggableItem
+                      key={item.id}
+                      id={item.id}
+                      name={item.name}
+                      type={item.type}
+                      icon={item.icon}
+                      chartType={item.chartType}
+                      className="min-w-0 flex-shrink-0"
+                    />
                   </div>
                 ))}
               </div>
@@ -209,9 +216,9 @@ export default function LibraryPanel() {
           ))}
         </div>
         {filteredCategories.length === 0 && (
-          <div className="text-center py-8">
-            <Search className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-            <p className="text-muted-foreground">No components found</p>
+          <div className="text-center py-8 min-w-0">
+            <Search className="w-8 h-8 text-muted-foreground mx-auto mb-2 min-w-0" />
+            <p className="text-muted-foreground min-w-0">No components found</p>
           </div>
         )}
       </ScrollArea>

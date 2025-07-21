@@ -15,7 +15,7 @@ export default function ThemeToggle() {
 
   return (
     <div
-      className="flex items-center p-2 glass-panel rounded-lg border border-border/40 shadow-sm w-full max-w-md mx-auto gap-2 overflow-x-auto custom-scrollbar"
+      className="flex items-center p-2 gmin-w-0lass-panel rounded-lg border border-border/40 shadow-sm w-full max-w-md mx-auto gap-2 overflow-x-auto custom-scrollbar"
       style={{ WebkitOverflowScrolling: "touch", minHeight: "48px" }}
     >
       {themes.map(({ id, name, icon: Icon }) => (
@@ -24,18 +24,18 @@ export default function ThemeToggle() {
           onClick={() => setActiveTheme(id)}
           className={`
             flex items-center gap-2 px-4 py-2 rounded-md transition-all text-base font-medium outline-none min-w-[120px] max-w-xs
-            focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2
+            focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 min-w-0
             ${
               activeTheme === id
-                ? "bg-primary/10 text-primary shadow border border-primary/30"
-                : "text-muted-foreground hover:text-foreground hover:bg-accent/30 border border-transparent"
+                ? "bg-primary/10 text-primary shadow border border-primary/30 min-w-0"
+                : "text-muted-foreground hover:text-foreground hover:bg-accent/30 border border-transparent min-w-0"
             }
           `}
           tabIndex={0}
           aria-pressed={activeTheme === id}
         >
-          <Icon className="w-5 h-5 shrink-0" />
-          <span className="whitespace-nowrap truncate max-w-[100px]">
+          <Icon className="w-5 h-5 shrink-0 min-w-0" />
+          <span className="whitespace-nowrap truncate max-w-[100px] min-w-0">
             {name}
           </span>
         </button>

@@ -1,16 +1,16 @@
-'use client'
+"use client";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible"
-import { Button } from "@/components/ui/button"
-import { ChevronsUpDown } from "lucide-react"
+} from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
+import { ChevronsUpDown } from "lucide-react";
 
 export default function ThemedCollapsible({ items }) {
   return (
-    <Collapsible className="w-[350px] space-y-2">
-      <div className="flex items-center justify-between space-x-4 px-4">
+    <Collapsible className="w-[350px] space-y-2 min-w-0">
+      <div className="flex items-center justify-between space-x-4 px-4 min-w-0">
         <h4 className="text-sm font-semibold">
           @peduarte starred 3 repositories
         </h4>
@@ -33,5 +33,5 @@ export default function ThemedCollapsible({ items }) {
         </div>
       </CollapsibleContent>
     </Collapsible>
-  )
+  );
 }

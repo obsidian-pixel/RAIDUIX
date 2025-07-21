@@ -1,6 +1,8 @@
 import { create } from "zustand";
 
 const useAppStore = create((set, get) => ({
+  gridColorMode: "auto", // 'auto' | 'dark' | 'light'
+  setGridColorMode: (mode) => set({ gridColorMode: mode }),
   // Theme state
   activeTheme: "material", // 'material' | 'glass' | 'skeuo'
   colorMode: "dark", // 'light' | 'dark'
@@ -11,7 +13,7 @@ const useAppStore = create((set, get) => ({
   zoom: 100,
   showGrid: true,
   snapToGrid: true,
-  canvasBg: "#f8fafc", // default background color
+  canvasBg: null, // default background color (null means use theme)
   gridSize: 20, // default grid size in px
 
   // Code generation state

@@ -49,13 +49,13 @@ export default function ThemedCard({
       className={
         getThemeClasses() +
         (props.fillParent
-          ? " w-full h-full flex flex-col items-center justify-center"
+          ? " w-full h-full flex flex-col min-w-0 items-center justify-center"
           : "")
       }
       {...props}
     >
-      <h3 className="text-lg font-semibold mb-2">{title}</h3>
-      <p className="text-muted-foreground">{content}</p>
+      <h3 className="text-lg font-semibold mb-2 min-w-0">{title}</h3>
+      <p className="text-muted-foreground min-w-0">{content}</p>
     </div>
   );
 }

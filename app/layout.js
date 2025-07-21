@@ -14,19 +14,17 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        {/* Favicons and manifest for SEO */}
+        <link
+          rel="icon"
+          type="image/png"
+          href="/raiduix_logo_transparent_bg.PNG"
+        />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+      </head>
       <body className={inter.className}>
-        <head>
-          {/* Favicons and manifest for SEO */}
-          <link rel="icon" href="/favicon.ico" sizes="any" />
-          <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-          <link
-            rel="icon"
-            type="image/png"
-            href="/raiduix_logo_transparent_bg.PNG"
-          />
-          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-          <link rel="manifest" href="/site.webmanifest" />
-        </head>
         <ThemeProvider>
           <Analytics />
           {children}

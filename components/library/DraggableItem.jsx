@@ -177,13 +177,19 @@ export default function DraggableItem({
       className={`
         group cursor-move p-3 glass-panel rounded-lg border border-border/30 transition-all
         hover:border-border/60 hover:shadow-md
-        min-w-[100px] max-w-full w-full box-border
+        min-w-0 box-border
         ${isDragging ? "opacity-50 scale-95" : ""}
       `}
-      style={{ wordBreak: "break-word" }}
+      style={{ wordBreak: "break-word", minWidth: 0 }}
     >
-      <div className="flex items-center justify-between mb-2 min-w-0">
-        <div className="flex items-center gap-2 min-w-0">
+      <div
+        className="flex items-center justify-between mb-2 min-w-0"
+        style={{ minWidth: 0 }}
+      >
+        <div
+          className="flex items-center gap-2 min-w-0"
+          style={{ minWidth: 0 }}
+        >
           {Icon && <Icon className="w-4 h-4 text-muted-foreground shrink-0" />}
           <span className="text-sm font-medium truncate">{name}</span>
         </div>
@@ -191,7 +197,7 @@ export default function DraggableItem({
       </div>
 
       {/* Preview */}
-      <div className="pointer-events-none overflow-x-auto overflow-y-visible w-full">
+      <div className="pointer-events-none min-w-0" style={{ minWidth: 0 }}>
         {renderPreview()}
       </div>
     </div>
